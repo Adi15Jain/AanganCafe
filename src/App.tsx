@@ -46,7 +46,8 @@ function App() {
     return (
         <BrowserRouter>
             <ScrollToTop />
-            <div className="h-[100svh] w-full flex flex-col overflow-hidden relative">
+            {/* FORCE strictly block horizontal view bleed on mobiles using w-full overflow-x-hidden */}
+            <div className="h-[100svh] w-full max-w-[100vw] flex flex-col overflow-x-hidden overflow-y-hidden relative">
                 <CanvasBackground />
                 <Navbar />
                 <main className="flex-1 snap-container">

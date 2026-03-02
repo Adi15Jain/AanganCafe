@@ -174,7 +174,11 @@ export default function About() {
                         subtitle="The uncompromising principles that guide every dish we plate and every cup we pour."
                     />
 
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mt-12 sm:mt-16">
+                    <div
+                        className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 mt-12 sm:mt-16
+                        overflow-x-auto sm:overflow-visible pb-4 sm:pb-0
+                        snap-x snap-mandatory scrollbar-hide -mx-5 px-5 sm:mx-0 sm:px-0"
+                    >
                         {[
                             {
                                 icon: Heart, // Changed from Award
@@ -204,7 +208,7 @@ export default function About() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, margin: "-60px" }}
                                 transition={{ delay: i * 0.12, duration: 0.7 }}
-                                className="glass-card p-8 text-center group"
+                                className="glass-card p-8 text-center group w-[calc(100vw-3rem)] max-w-[320px] sm:max-w-none sm:w-auto shrink-0 snap-center"
                             >
                                 <div
                                     className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6
@@ -237,7 +241,11 @@ export default function About() {
                         title="The Aangan Family"
                         subtitle="The people behind the warmth — small team, big heart."
                     />
-                    <div className="grid sm:grid-cols-3 gap-8">
+                    <div
+                        className="flex sm:grid sm:grid-cols-3 gap-6 sm:gap-8
+                        overflow-x-auto sm:overflow-visible pb-4 sm:pb-0
+                        snap-x snap-mandatory scrollbar-hide -mx-5 px-5 sm:mx-0 sm:px-0"
+                    >
                         {team.map((member, i) => (
                             <motion.div
                                 key={i}
@@ -245,7 +253,7 @@ export default function About() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, margin: "-60px" }}
                                 transition={{ delay: i * 0.12, duration: 0.7 }}
-                                className="text-center group"
+                                className="text-center group w-[75vw] sm:w-auto shrink-0 snap-center"
                             >
                                 <div
                                     className="relative w-40 h-40 mx-auto mb-6 rounded-full overflow-hidden

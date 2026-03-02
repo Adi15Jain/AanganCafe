@@ -166,7 +166,9 @@ export default function Home() {
                             initial="hidden"
                             animate="visible"
                             custom={4}
-                            className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-8 lg:mt-0 w-full lg:w-auto"
+                            className="flex sm:grid sm:grid-cols-3 gap-3 sm:gap-4 mt-8 lg:mt-0 w-full lg:w-auto
+                                overflow-x-auto sm:overflow-visible pb-2 sm:pb-0
+                                snap-x snap-mandatory scrollbar-hide"
                         >
                             {[
                                 {
@@ -203,7 +205,7 @@ export default function Home() {
                                         border border-white/[0.08]
                                         shadow-[0_4px_24px_rgba(0,0,0,0.2)]
                                         cursor-default
-                                        w-full overflow-hidden"
+                                        w-[calc(100vw-3rem)] sm:w-full max-w-[320px] sm:max-w-none shrink-0 snap-center overflow-hidden"
                                 >
                                     <div
                                         className={`shrink-0 w-11 h-11 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center sm:mb-3 ${
@@ -350,7 +352,8 @@ export default function Home() {
                         title="From Our Kitchen"
                         subtitle="A taste of what's on the table — handpicked favourites loved by our regulars."
                     />
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {/* Dense responsive grid: 1-col Mobile, 2-col Tablet, 4-col Desktop. No scrolling. */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 xl:gap-5 mt-8 sm:mt-10">
                         {featuredItems.map((item, i) => (
                             <motion.div
                                 key={item.id}
@@ -362,6 +365,7 @@ export default function Home() {
                                     duration: 0.6,
                                     ease: [0.22, 1, 0.36, 1],
                                 }}
+                                className="w-full"
                             >
                                 <MenuCard item={item} />
                             </motion.div>
@@ -444,7 +448,7 @@ export default function Home() {
                                     ))}
                                 </tbody>
                             </table>
-                            <p className="mt-5 text-xs text-white/25 italic">
+                            <p className="mt-4 sm:mt-5 text-[0.65rem] sm:text-xs text-white/25 italic">
                                 ★ Kitchen closes 30 min before closing time.
                             </p>
                         </motion.div>

@@ -59,11 +59,27 @@ body {
             transparent 55%
         );
     background-attachment: fixed;
+    font-weight: 300;
     color: var(--color-dark);
     line-height: 1.65;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    width: 100vw;
+    max-width: 100vw;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+#root {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* ── Subtle grain overlay ── */
@@ -393,27 +409,39 @@ p {
     animation: pulse-glow 4s ease-in-out infinite;
 }
 
-/* ── Custom scrollbar ── */
-
-::-webkit-scrollbar {
-    width: 6px;
+/* ── Hide Scrollbars Utility ── */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
-::-webkit-scrollbar-track {
-    background: var(--color-bg);
-}
+/* ── Custom scrollbar for Desktop only ── */
 
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-        180deg,
-        var(--color-primary),
-        var(--color-accent)
-    );
-    border-radius: 9999px;
-}
+@media (min-width: 1024px) {
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
 
-::-webkit-scrollbar-thumb:hover {
-    background: var(--color-primary);
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(
+            180deg,
+            var(--color-primary),
+            var(--color-accent)
+        );
+        border-radius: 9999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-primary);
+    }
 }
 
 /* ── Selection ── */

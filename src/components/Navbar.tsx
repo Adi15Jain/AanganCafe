@@ -36,7 +36,7 @@ export default function Navbar() {
                     : "bg-transparent border-b border-transparent"
             }`}
         >
-            <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav className="max-w-7xl relative mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 sm:h-20">
                     {/* Logo */}
                     <Link
@@ -54,7 +54,7 @@ export default function Navbar() {
                     </Link>
 
                     {/* Desktop nav */}
-                    <ul className="hidden md:flex items-center gap-1">
+                    <ul className="hidden md:flex relative items-center gap-1">
                         {navLinks.map((link) => {
                             const isActive = location.pathname === link.to;
                             return (
@@ -142,7 +142,7 @@ export default function Navbar() {
                                 duration: 0.35,
                                 ease: [0.22, 1, 0.36, 1],
                             }}
-                            className="md:hidden overflow-hidden"
+                            className="relative md:hidden overflow-hidden"
                         >
                             <ul
                                 className="flex flex-col gap-0.5 rounded-2xl p-3 mb-4

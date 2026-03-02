@@ -20,7 +20,7 @@
         "react-parallax-tilt": "^1.7.319",
         "react-router": "^7.13.1",
         "tailwindcss": "^4.2.1",
-        "three": "^0.183.1"
+        "three": "^0.169.0"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.1",

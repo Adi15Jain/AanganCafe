@@ -30,7 +30,6 @@ export const menuData: MenuCategory[] = [
                 price: 129,
                 tags: ["V", "GF"],
                 image: "https://images.unsplash.com/photo-1645177628172-a94c1f96e6db?w=400&h=300&fit=crop",
-                featured: true,
             },
             {
                 id: 2,
@@ -40,6 +39,7 @@ export const menuData: MenuCategory[] = [
                 price: 149,
                 tags: ["V"],
                 image: "https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&h=300&fit=crop",
+                featured: true,
             },
             {
                 id: 3,
@@ -104,6 +104,16 @@ export const menuData: MenuCategory[] = [
                 tags: ["V", "VE", "GF"],
                 image: "https://images.unsplash.com/photo-1544252890-c3e95e867fa1?w=400&h=300&fit=crop",
             },
+            {
+                id: 20,
+                name: "Saffron Latte",
+                description:
+                    "Rich espresso & textured milk infused with pure Kashmiri saffron.",
+                price: 159,
+                tags: ["V", "GF"],
+                image: "https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?w=400&h=300&fit=crop",
+                featured: true,
+            },
         ],
     },
     {
@@ -120,7 +130,6 @@ export const menuData: MenuCategory[] = [
                 price: 199,
                 tags: ["V", "GF"],
                 image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=300&fit=crop",
-                featured: true,
             },
             {
                 id: 10,
@@ -149,6 +158,16 @@ export const menuData: MenuCategory[] = [
                 tags: ["V"],
                 image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop",
             },
+            {
+                id: 21,
+                name: "Butter Chicken Roll",
+                description:
+                    "Tandoori chicken morsels in creamy makhani sauce, rolled in a flaky paratha.",
+                price: 249,
+                tags: [],
+                image: "https://images.unsplash.com/photo-1644336021648-9333ce672d54?w=400&h=300&fit=crop",
+                featured: true,
+            },
         ],
     },
     {
@@ -165,7 +184,6 @@ export const menuData: MenuCategory[] = [
                 price: 109,
                 tags: ["V"],
                 image: "https://images.unsplash.com/photo-1666190070113-b6a3181ef5b2?w=400&h=300&fit=crop",
-                featured: true,
             },
             {
                 id: 14,

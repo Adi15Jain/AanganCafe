@@ -77,8 +77,8 @@ export default function Contact() {
                                 align="left"
                             />
 
-                            {/* Contact cards — glassmorphic */}
-                            <div className="space-y-4">
+                            {/* Contact cards — glassmorphic carousels on mobile */}
+                            <div className="flex sm:block gap-4 sm:space-y-4 overflow-x-auto sm:overflow-visible pb-4 sm:pb-0 snap-x snap-mandatory scrollbar-hide -mx-5 px-5 sm:mx-0 sm:px-0">
                                 {[
                                     {
                                         icon: MapPin,
@@ -101,7 +101,7 @@ export default function Contact() {
                                 ].map((item, i) => (
                                     <div
                                         key={i}
-                                        className="flex items-start gap-4 glass-card p-5"
+                                        className="glass-card p-6 sm:p-8 flex items-start gap-4 hover:-translate-y-1 transition-transform group w-[calc(100vw-3rem)] sm:w-auto max-w-[320px] sm:max-w-none shrink-0 snap-center"
                                     >
                                         <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
                                             <item.icon

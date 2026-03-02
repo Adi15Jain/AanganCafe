@@ -1,11 +1,12 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Sphere } from "@react-three/drei";
 import * as THREE from "three";
 
+const dummy = new THREE.Object3D();
+
 function FloatingParticles({ count = 15 }) {
     const meshRef = useRef<THREE.InstancedMesh>(null);
-    const dummy = useMemo(() => new THREE.Object3D(), []);
 
     // Generate random positions, scales, and colors for particles
     const particles = useMemo(() => {
@@ -43,7 +44,7 @@ function FloatingParticles({ count = 15 }) {
     }, [count]);
 
     // Apply colors to instances initially
-    useMemo(() => {
+    useEffect(() => {
         if (!meshRef.current) return;
         const colorArray = new Float32Array(count * 3);
         particles.forEach((p, i) => {
