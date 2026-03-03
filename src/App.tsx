@@ -20,10 +20,10 @@ function ScrollToTop() {
 
 /* Animated page wrapper */
 const pageTransition = {
-    initial: { opacity: 0, y: 16 },
+    initial: { opacity: 0, y: 8 },
     animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -10 },
-    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const },
+    exit: { opacity: 0, y: -8 },
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const },
 };
 
 function AnimatedRoutes() {
@@ -37,6 +37,7 @@ function AnimatedRoutes() {
                     <Route path="/about" element={<About />} />
                     <Route path="/contact" element={<Contact />} />
                 </Routes>
+                <Footer />
             </motion.div>
         </AnimatePresence>
     );
@@ -46,13 +47,12 @@ function App() {
     return (
         <BrowserRouter>
             <ScrollToTop />
-            {/* FORCE strictly block horizontal view bleed on mobiles using w-full overflow-x-hidden */}
-            <div className="h-[100svh] w-full max-w-[100vw] flex flex-col overflow-x-hidden overflow-y-hidden relative">
+            {/* Root: no height constraint, natural scroll, overflow-x locked */}
+            <div className="w-full min-h-screen relative overflow-x-hidden">
                 <CanvasBackground />
                 <Navbar />
-                <main className="flex-1 snap-container">
+                <main>
                     <AnimatedRoutes />
-                    <Footer />
                 </main>
             </div>
         </BrowserRouter>

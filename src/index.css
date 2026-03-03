@@ -163,38 +163,16 @@ body::before {
     transform: translateY(-4px);
 }
 
-/* ── Section spacing & Snapping ── */
-
-.snap-container {
-    height: 100svh;
-    overflow-y: scroll;
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-}
+/* ── Section base (continuous smooth scroll, no mandatory snap) ── */
 
 section {
-    min-height: 100svh;
-    padding: 3.5rem 0; /* further reduced on mobile for tighter pacing */
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    scroll-margin-top: 4rem; /* offset for fixed navbar */
 }
 
-/* Mobile-specific bottom padding to avoid nav UI overlap */
+/* Mobile bottom safe area: avoids phone nav UI overlap */
 @media (max-width: 768px) {
     .pb-safe-bottom {
         padding-bottom: max(env(safe-area-inset-bottom), 5rem);
-    }
-}
-
-@media (min-width: 640px) {
-    section {
-        padding: 5rem 0;
-    }
-}
-
-@media (min-width: 1024px) {
-    section {
-        padding: 6rem 0;
     }
 }
 
@@ -483,5 +461,33 @@ p {
 }
 
 .animate-scroll-bounce {
-    animation: scroll-bounce 2s ease-in-out infinite;
+    animation: scroll-bounce 2.5s ease-in-out infinite;
+}
+
+/* ── GPU layer hints for animated elements ──
+   Promotes elements that will animate to their own compositor layer,
+   eliminating paint jank. Especially effective on mobile GPUs. */
+[data-motion],
+.motion-safe,
+.glass-card,
+.glass {
+    will-change: transform;
+}
+
+/* ── Accessibility: Respect reduced-motion system preference ──
+   Also a major CPU/battery win on low-end mobile devices */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .animate-pulse-glow,
+    .animate-scroll-bounce {
+        animation: none !important;
+    }
 }

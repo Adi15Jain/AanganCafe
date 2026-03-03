@@ -1,7 +1,25 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import SectionHeading from "../components/SectionHeading";
+
+/* ── 3D word-flip helpers ── */
+const wordFlip = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.08 } },
+};
+const wordItem = {
+    hidden: { opacity: 0, y: 40, rotateX: 80 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        rotateX: 0,
+        transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+    },
+};
+
+const inputClass =
+    "w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-primary/40 focus:bg-white/[0.05] focus:shadow-[0_0_20px_rgba(255,107,53,0.08)] transition-all duration-300";
 
 export default function Contact() {
     const [formData, setFormData] = useState({
@@ -19,54 +37,93 @@ export default function Contact() {
         setFormData({ name: "", email: "", subject: "", message: "" });
     };
 
+    const heroRef = useRef<HTMLElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: heroRef,
+        offset: ["start start", "end start"],
+    });
+    const heroImgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+
     return (
         <>
-            {/* Hero */}
-            <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 z-0">
+            {/* ══════════ HERO ══════════ */}
+            <section
+                ref={heroRef}
+                className="relative min-h-[60svh] sm:min-h-[65svh] flex items-center justify-center overflow-hidden pt-16"
+            >
+                <motion.div
+                    className="absolute inset-0 z-0"
+                    style={{ y: heroImgY }}
+                >
                     <img
                         src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1920&h=800&fit=crop&q=80"
                         alt="Café entrance"
-                        className="w-full h-full object-cover"
+                        className="w-full h-[115%] object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-[rgba(12,14,19,0.5)] via-[rgba(12,14,19,0.4)] to-[rgba(12,14,19,0.95)]" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[rgba(12,14,19,0.5)] via-[rgba(12,14,19,0.4)] to-[rgba(12,14,19,0.97)]" />
                     <div className="absolute inset-0 bg-gradient-to-r from-[rgba(12,14,19,0.5)] to-transparent" />
-                </div>
+                </motion.div>
 
-                <div className="absolute bottom-0 right-1/3 w-96 h-48 bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
+                <div className="absolute bottom-0 right-1/3 w-72 h-36 bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
 
-                <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 text-center">
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7 }}
-                        className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-white mb-4"
+                <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 text-center py-14 sm:py-20">
+                    <motion.div
+                        initial={{ scale: 0.94, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                     >
-                        Get in Touch
-                    </motion.h1>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7, delay: 0.1 }}
-                        className="text-white/40 text-lg max-w-xl mx-auto"
-                    >
-                        Questions, feedback, or just want to say hello? We'd
-                        love to hear from you.
-                    </motion.p>
+                        <motion.div
+                            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-5
+                                bg-white/[0.07] backdrop-blur-xl border border-white/[0.1] text-accent/80 text-xs sm:text-sm tracking-wide"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                        >
+                            Sector 21C, Faridabad · Open Today
+                        </motion.div>
+                        <motion.h1
+                            variants={wordFlip}
+                            initial="hidden"
+                            animate="visible"
+                            style={{ perspective: "800px" }}
+                            className="font-heading font-bold text-white
+                                text-[clamp(2.2rem,7vw,4.5rem)]
+                                leading-tight tracking-tight mb-4"
+                        >
+                            {["Get", "in", "Touch"].map((w) => (
+                                <motion.span
+                                    key={w}
+                                    variants={wordItem}
+                                    className="inline-block mr-[0.25em]"
+                                >
+                                    {w}
+                                </motion.span>
+                            ))}
+                        </motion.h1>
+                        <motion.p
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.55, duration: 0.6 }}
+                            className="text-white/40 text-base sm:text-lg max-w-md mx-auto leading-relaxed"
+                        >
+                            Questions, feedback, or just want to say hello? We'd
+                            love to hear from you.
+                        </motion.p>
+                    </motion.div>
                 </div>
             </section>
 
-            {/* Contact info + form */}
-            <section className="py-20 sm:py-28 relative snap-start">
-                <div className="absolute top-1/4 left-0 w-80 h-80 bg-accent/4 rounded-full blur-[120px] pointer-events-none" />
-                <div className="absolute bottom-1/4 right-0 w-72 h-72 bg-primary/4 rounded-full blur-[100px] pointer-events-none" />
+            {/* ══════════ CONTACT CONTENT ══════════ */}
+            <section className="py-14 sm:py-20 lg:py-28 relative">
+                <div className="absolute top-1/4 left-0 w-72 h-72 bg-accent/4 rounded-full blur-[120px] pointer-events-none" />
+                <div className="absolute bottom-1/4 right-0 w-64 h-64 bg-primary/4 rounded-full blur-[100px] pointer-events-none" />
 
                 <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
-                    <div className="grid lg:grid-cols-5 gap-10 lg:gap-16">
-                        {/* Left — Info */}
+                    <div className="grid lg:grid-cols-5 gap-8 lg:gap-14">
+                        {/* Left — Info sidebar */}
                         <motion.div
-                            className="lg:col-span-2 space-y-6"
-                            initial={{ opacity: 0, x: -30 }}
+                            className="lg:col-span-2 space-y-5"
+                            initial={{ opacity: 0, x: -24 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.7 }}
@@ -77,8 +134,8 @@ export default function Contact() {
                                 align="left"
                             />
 
-                            {/* Contact cards — glassmorphic carousels on mobile */}
-                            <div className="flex sm:block gap-4 sm:space-y-4 overflow-x-auto sm:overflow-visible pb-4 sm:pb-0 snap-x snap-mandatory scrollbar-hide -mx-5 px-5 sm:mx-0 sm:px-0">
+                            {/* Contact info cards — grid on mobile (no horizontal carousel) */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
                                 {[
                                     {
                                         icon: MapPin,
@@ -98,25 +155,33 @@ export default function Contact() {
                                         title: "Email",
                                         lines: ["hello@aangancafe.in"],
                                     },
+                                    {
+                                        icon: Clock,
+                                        title: "Hours",
+                                        lines: [
+                                            "Mon–Sat: 8 AM – 10 PM",
+                                            "Sunday: 9 AM – 11 PM",
+                                        ],
+                                    },
                                 ].map((item, i) => (
                                     <div
                                         key={i}
-                                        className="glass-card p-6 sm:p-8 flex items-start gap-4 hover:-translate-y-1 transition-transform group w-[calc(100vw-3rem)] sm:w-auto max-w-[320px] sm:max-w-none shrink-0 snap-center"
+                                        className="glass-card p-4 sm:p-5 flex items-start gap-3 hover:-translate-y-0.5 transition-transform"
                                     >
-                                        <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+                                        <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
                                             <item.icon
-                                                size={18}
+                                                size={16}
                                                 className="text-primary"
                                             />
                                         </div>
                                         <div>
-                                            <h3 className="font-semibold text-white text-sm">
+                                            <h3 className="font-semibold text-white text-sm mb-0.5">
                                                 {item.title}
                                             </h3>
                                             {item.lines.map((line, j) => (
                                                 <p
                                                     key={j}
-                                                    className="text-sm text-white/35"
+                                                    className="text-xs sm:text-sm text-white/35"
                                                 >
                                                     {line}
                                                 </p>
@@ -125,61 +190,21 @@ export default function Contact() {
                                     </div>
                                 ))}
                             </div>
-
-                            {/* Hours — glassmorphic */}
-                            <div className="glass-card p-6">
-                                <div className="flex items-center gap-2.5 mb-4">
-                                    <Clock size={18} className="text-accent" />
-                                    <h3 className="font-semibold text-white">
-                                        Opening Hours
-                                    </h3>
-                                </div>
-                                <table className="w-full text-sm">
-                                    <tbody>
-                                        {[
-                                            {
-                                                day: "Monday – Friday",
-                                                time: "8:00 AM – 10:00 PM",
-                                            },
-                                            {
-                                                day: "Saturday",
-                                                time: "8:00 AM – 11:00 PM",
-                                            },
-                                            {
-                                                day: "Sunday",
-                                                time: "9:00 AM – 11:00 PM",
-                                            },
-                                        ].map((row, i) => (
-                                            <tr
-                                                key={i}
-                                                className="border-b border-white/[0.06] last:border-0"
-                                            >
-                                                <td className="py-3 text-white/60 font-medium">
-                                                    {row.day}
-                                                </td>
-                                                <td className="py-3 text-white/35 text-right">
-                                                    {row.time}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
                         </motion.div>
 
                         {/* Right — Form */}
                         <motion.div
                             className="lg:col-span-3"
-                            initial={{ opacity: 0, x: 30 }}
+                            initial={{ opacity: 0, x: 24 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.7, delay: 0.1 }}
                         >
-                            <div className="glass-card p-7 sm:p-10">
-                                <h2 className="font-heading font-semibold text-2xl text-white mb-2">
+                            <div className="glass-card p-6 sm:p-8 lg:p-10">
+                                <h2 className="font-heading font-semibold text-xl sm:text-2xl text-white mb-1.5">
                                     Send Us a Message
                                 </h2>
-                                <p className="text-sm text-white/35 mb-8">
+                                <p className="text-sm text-white/35 mb-7">
                                     Whether it's a catering enquiry, feedback,
                                     or a reservation request — drop us a line.
                                 </p>
@@ -199,7 +224,7 @@ export default function Contact() {
                                     onSubmit={handleSubmit}
                                     className="space-y-5"
                                 >
-                                    <div className="grid sm:grid-cols-2 gap-5">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                         <div>
                                             <label
                                                 htmlFor="name"
@@ -219,13 +244,7 @@ export default function Contact() {
                                                     })
                                                 }
                                                 placeholder="e.g. Priya Sharma"
-                                                className="w-full px-4 py-3.5 rounded-xl
-                                                    bg-white/[0.03] border border-white/[0.08]
-                                                    text-white text-sm
-                                                    placeholder:text-white/20
-                                                    focus:outline-none focus:border-primary/40 focus:bg-white/[0.05]
-                                                    focus:shadow-[0_0_20px_rgba(255,107,53,0.08)]
-                                                    transition-all duration-300"
+                                                className={inputClass}
                                             />
                                         </div>
                                         <div>
@@ -247,13 +266,7 @@ export default function Contact() {
                                                     })
                                                 }
                                                 placeholder="priya@example.com"
-                                                className="w-full px-4 py-3.5 rounded-xl
-                                                    bg-white/[0.03] border border-white/[0.08]
-                                                    text-white text-sm
-                                                    placeholder:text-white/20
-                                                    focus:outline-none focus:border-primary/40 focus:bg-white/[0.05]
-                                                    focus:shadow-[0_0_20px_rgba(255,107,53,0.08)]
-                                                    transition-all duration-300"
+                                                className={inputClass}
                                             />
                                         </div>
                                     </div>
@@ -277,13 +290,7 @@ export default function Contact() {
                                                 })
                                             }
                                             placeholder="Catering enquiry, feedback, etc."
-                                            className="w-full px-4 py-3.5 rounded-xl
-                                                bg-white/[0.03] border border-white/[0.08]
-                                                text-white text-sm
-                                                placeholder:text-white/20
-                                                focus:outline-none focus:border-primary/40 focus:bg-white/[0.05]
-                                                focus:shadow-[0_0_20px_rgba(255,107,53,0.08)]
-                                                transition-all duration-300"
+                                            className={inputClass}
                                         />
                                     </div>
 
@@ -306,13 +313,7 @@ export default function Contact() {
                                                 })
                                             }
                                             placeholder="Tell us what's on your mind..."
-                                            className="w-full px-4 py-3.5 rounded-xl
-                                                bg-white/[0.03] border border-white/[0.08]
-                                                text-white text-sm
-                                                placeholder:text-white/20
-                                                focus:outline-none focus:border-primary/40 focus:bg-white/[0.05]
-                                                focus:shadow-[0_0_20px_rgba(255,107,53,0.08)]
-                                                transition-all duration-300 resize-none"
+                                            className={`${inputClass} resize-none`}
                                         />
                                     </div>
 
@@ -320,8 +321,8 @@ export default function Contact() {
                                         type="submit"
                                         className="inline-flex items-center gap-2.5
                                             bg-gradient-to-r from-primary to-primary-dark
-                                            text-white px-8 py-4 rounded-xl
-                                            font-semibold
+                                            text-white px-7 sm:px-8 py-3.5 sm:py-4 rounded-xl
+                                            font-semibold text-sm sm:text-base
                                             shadow-[0_6px_28px_rgba(255,107,53,0.3)]
                                             hover:shadow-[0_8px_40px_rgba(255,107,53,0.45)]
                                             hover:-translate-y-0.5
@@ -340,24 +341,49 @@ export default function Contact() {
                 </div>
             </section>
 
-            {/* Map placeholder — 100svh */}
-            <section className="relative h-[100svh] min-h-[100svh] snap-start flex flex-col justify-center pb-safe-bottom overflow-hidden border-t border-white/[0.06]">
-                <div className="text-center">
-                    <MapPin
-                        size={40}
-                        className="text-primary mx-auto mb-3 opacity-25"
-                    />
-                    <p className="text-white/25 text-sm mb-2">
-                        Interactive map coming soon
-                    </p>
-                    <a
-                        href="https://maps.google.com/?q=Sector+21C+Faridabad"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary font-medium text-sm hover:underline"
+            {/* ══════════ MAP SECTION ══════════ */}
+            <section className="pb-16 sm:pb-20 relative">
+                <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="glass-card overflow-hidden"
                     >
-                        Open in Google Maps →
-                    </a>
+                        <div className="p-5 sm:p-6 border-b border-white/[0.06] flex items-center gap-3">
+                            <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center">
+                                <MapPin size={16} className="text-primary" />
+                            </div>
+                            <div>
+                                <h3 className="font-heading font-semibold text-base sm:text-lg text-white">
+                                    Aangan Café Location
+                                </h3>
+                                <p className="text-xs sm:text-sm text-white/40">
+                                    Sector 21C, Faridabad, Haryana 121001
+                                </p>
+                            </div>
+                        </div>
+                        <div className="h-44 sm:h-56 bg-white/[0.02] flex items-center justify-center">
+                            <div className="text-center">
+                                <MapPin
+                                    size={28}
+                                    className="text-primary mx-auto mb-3 opacity-30"
+                                />
+                                <p className="text-sm text-white/30 mb-3">
+                                    Interactive map coming soon
+                                </p>
+                                <a
+                                    href="https://maps.google.com/?q=Sector+21C+Faridabad"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-block text-sm text-primary font-medium hover:underline"
+                                >
+                                    Open in Google Maps →
+                                </a>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
             </section>
         </>

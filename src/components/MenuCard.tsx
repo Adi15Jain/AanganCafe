@@ -71,11 +71,18 @@ export default function MenuCard({ item, compact = false }: MenuCardProps) {
                     </div>
                 </div>
 
-                {/* Content Body - Very dense layout */}
+                {/* Content Body */}
                 <div className="p-4 sm:p-5 flex flex-col flex-1">
-                    <h3 className="font-heading font-semibold text-[1.1rem] sm:text-lg text-white group-hover:text-primary transition-colors duration-300 leading-tight">
-                        {item.name}
-                    </h3>
+                    <div className="flex items-start gap-2">
+                        <h3 className="font-heading font-semibold text-[1.1rem] sm:text-lg text-white group-hover:text-primary transition-colors duration-300 leading-tight flex-1">
+                            {item.name}
+                        </h3>
+                        {item.badge && (
+                            <span className="shrink-0 mt-0.5 text-[0.55rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-accent/15 text-accent border border-accent/25">
+                                {item.badge}
+                            </span>
+                        )}
+                    </div>
                     <p className="text-[0.8rem] sm:text-sm text-white/40 mt-1.5 leading-snug line-clamp-2 max-w-[95%]">
                         {item.description}
                     </p>
