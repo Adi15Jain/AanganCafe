@@ -164,7 +164,7 @@ export default function Home() {
                         initial="hidden"
                         animate="visible"
                         custom={1}
-                        className="text-base sm:text-lg text-white/50 leading-relaxed max-w-[44ch] mb-8 sm:mb-10"
+                        className="text-base sm:text-lg text-white leading-relaxed max-w-[44ch] mb-8 sm:mb-10"
                     >
                         {siteConfig.description}
                     </motion.p>
@@ -249,12 +249,12 @@ export default function Home() {
                         transition={{ delay: 2.2, duration: 0.8 }}
                         className="flex flex-col items-center gap-1.5"
                     >
-                        <span className="text-[0.58rem] text-white/30 tracking-[0.22em] uppercase">
+                        <span className="text-[1rem] text-white/40 tracking-[0.22rem] uppercase">
                             Scroll
                         </span>
                         <ChevronDown
-                            size={15}
-                            className="text-white/30 animate-scroll-bounce"
+                            size={25}
+                            className="text-white/40 animate-scroll-bounce"
                         />
                     </motion.div>
                 </div>

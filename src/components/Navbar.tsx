@@ -72,7 +72,7 @@ export default function Navbar() {
                                         className={`relative px-4 py-2 rounded-xl text-[0.85rem] font-medium transition-all duration-300 ${
                                             isActive
                                                 ? "text-primary"
-                                                : "text-white/60 hover:text-white"
+                                                : "text-white hover:text-white"
                                         }`}
                                     >
                                         {link.label}
@@ -172,7 +172,7 @@ export default function Navbar() {
                                             className={`block px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                                                 location.pathname === link.to
                                                     ? "text-primary bg-primary/[0.08]"
-                                                    : "text-white/60 hover:text-white hover:bg-white/[0.04]"
+                                                    : "text-white hover:text-white hover:bg-white"
                                             }`}
                                         >
                                             {link.label}
