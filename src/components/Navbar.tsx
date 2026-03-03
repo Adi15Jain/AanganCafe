@@ -1,8 +1,12 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import {
+    motion,
+    AnimatePresence,
+    useMotionValue,
+    useSpring,
+} from "framer-motion";
 import { navLinks } from "../data/siteData";
 
 export default function Navbar() {
@@ -20,13 +24,24 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    /* Reading progress bar */
-    const { scrollYProgress } = useScroll();
-    const scaleX = useSpring(scrollYProgress, {
+    /* Reading progress bar — driven by native scroll, no framer-motion container warning */
+    const rawProgress = useMotionValue(0);
+    const scaleX = useSpring(rawProgress, {
         stiffness: 120,
         damping: 30,
         restDelta: 0.001,
     });
+
+    useEffect(() => {
+        const updateProgress = () => {
+            const scrollTop = window.scrollY;
+            const docHeight =
+                document.documentElement.scrollHeight - window.innerHeight;
+            rawProgress.set(docHeight > 0 ? scrollTop / docHeight : 0);
+        };
+        window.addEventListener("scroll", updateProgress, { passive: true });
+        return () => window.removeEventListener("scroll", updateProgress);
+    }, [rawProgress]);
 
     return (
         <motion.header

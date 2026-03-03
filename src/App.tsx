@@ -31,13 +31,17 @@ function AnimatedRoutes() {
     const location = useLocation();
     return (
         <AnimatePresence mode="wait">
-            <motion.div key={location.pathname} {...pageTransition}>
+            <motion.div
+                key={location.pathname}
+                {...pageTransition}
+                className="relative w-full"
+            >
                 <Routes location={location}>
                     <Route path="/" element={<Home />} />
                     <Route path="/menu" element={<Menu />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/contact" element={<Contact />} />
-                        <Route path="*" element={<NotFound />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
                 <Footer />
             </motion.div>
@@ -53,7 +57,7 @@ function App() {
             <div className="w-full min-h-screen relative overflow-x-hidden">
                 <CanvasBackground />
                 <Navbar />
-                <main>
+                <main className="relative">
                     <AnimatedRoutes />
                 </main>
             </div>
