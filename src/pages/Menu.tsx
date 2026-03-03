@@ -1,13 +1,24 @@
-import { useState, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+/**
+ * Menu.tsx — Menu page with category tabs, item count badges, and live search.
+ * All content comes from menuData.ts.
+ */
+import { useState, useRef, useMemo } from "react";
+import {
+    motion,
+    AnimatePresence,
+    useScroll,
+    useTransform,
+} from "framer-motion";
+import { Search, X } from "lucide-react";
 import SectionHeading from "../components/SectionHeading";
 import MenuCard from "../components/MenuCard";
+import PageMeta from "../components/PageMeta";
 import { menuData } from "../data/menuData";
 
-/* ── 3D word-flip helpers ── */
+/* Animation variants */
 const wordFlip = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.08 } },
+    visible: { transition: { staggerChildren: 0.1 } },
 };
 const wordItem = {
     hidden: { opacity: 0, y: 40, rotateX: 80 },
@@ -15,14 +26,13 @@ const wordItem = {
         opacity: 1,
         y: 0,
         rotateX: 0,
-        transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+        transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
     },
 };
 
 export default function Menu() {
     const [activeCategory, setActiveCategory] = useState(menuData[0].slug);
-    const currentCategory =
-        menuData.find((cat) => cat.slug === activeCategory) || menuData[0];
+    const [searchQuery, setSearchQuery] = useState("");
 
     const heroRef = useRef<HTMLElement>(null);
     const { scrollYProgress } = useScroll({
@@ -31,8 +41,33 @@ export default function Menu() {
     });
     const heroImgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
+    /* ── Search logic ── */
+    const isSearching = searchQuery.trim().length > 0;
+
+    const searchResults = useMemo(() => {
+        if (!isSearching) return [];
+        const q = searchQuery.toLowerCase();
+        return menuData.flatMap((cat) =>
+            cat.items
+                .filter(
+                    (item) =>
+                        item.name.toLowerCase().includes(q) ||
+                        item.description.toLowerCase().includes(q),
+                )
+                .map((item) => ({ ...item, categoryName: cat.name })),
+        );
+    }, [searchQuery, isSearching]);
+
+    const currentCategory =
+        menuData.find((cat) => cat.slug === activeCategory) || menuData[0];
+
     return (
         <>
+            <PageMeta
+                title="Our Menu"
+                description="Explore Aangan Café's heritage menu — from masala chai to thalis, Dal Makhani to fusion desserts. Heritage recipes, seasonal ingredients, honest food."
+            />
+
             {/* ══════════ HERO ══════════ */}
             <section
                 ref={heroRef}
@@ -105,58 +140,153 @@ export default function Menu() {
                 <div className="absolute top-1/4 right-0 w-64 h-64 bg-accent/4 rounded-full blur-[120px] pointer-events-none" />
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    {/* Category tabs */}
-                    <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 sm:mb-14">
-                        {menuData.map((cat) => (
+                    {/* ── Search bar ── */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="relative max-w-lg mx-auto mb-8 sm:mb-10"
+                    >
+                        <Search
+                            size={16}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none"
+                        />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search dishes, ingredients…"
+                            className="w-full pl-10 pr-10 py-3 rounded-xl
+                                bg-white/[0.04] backdrop-blur-xl
+                                border border-white/[0.08]
+                                text-white text-sm placeholder:text-white/25
+                                focus:outline-none focus:border-primary/40
+                                focus:bg-white/[0.06]
+                                transition-all duration-300"
+                        />
+                        {searchQuery && (
                             <button
-                                key={cat.slug}
-                                onClick={() => setActiveCategory(cat.slug)}
-                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
-                                    activeCategory === cat.slug
-                                        ? "bg-gradient-to-r from-primary to-primary-dark text-white shadow-[0_4px_20px_rgba(255,107,53,0.3)]"
-                                        : "bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] text-white/50 hover:text-white hover:border-white/[0.15] hover:bg-white/[0.06]"
-                                }`}
+                                onClick={() => setSearchQuery("")}
+                                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                                aria-label="Clear search"
                             >
-                                {cat.name}
+                                <X size={15} />
                             </button>
-                        ))}
-                    </div>
+                        )}
+                    </motion.div>
 
-                    {/* Category heading */}
-                    <SectionHeading
-                        title={currentCategory.name}
-                        subtitle={currentCategory.description}
-                    />
-
-                    {/* Menu items */}
-                    {menuData.map((category) => {
-                        const isActive = activeCategory === category.slug;
-                        if (!isActive) return null;
-
-                        return (
-                            <motion.div
-                                key={category.slug}
-                                initial={{ opacity: 0, y: 24 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5 }}
-                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mt-6"
-                            >
-                                {category.items.map((item, idx) => (
-                                    <motion.div
-                                        key={item.id}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{
-                                            delay: idx * 0.07,
-                                            duration: 0.45,
-                                        }}
+                    {/* ── Category tabs with item counts ── */}
+                    {!isSearching && (
+                        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 sm:mb-14">
+                            {menuData.map((cat) => {
+                                const isActive = activeCategory === cat.slug;
+                                return (
+                                    <button
+                                        key={cat.slug}
+                                        onClick={() =>
+                                            setActiveCategory(cat.slug)
+                                        }
+                                        className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                                            isActive
+                                                ? "bg-gradient-to-r from-primary to-primary-dark text-white shadow-[0_4px_20px_rgba(255,107,53,0.3)]"
+                                                : "bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] text-white/50 hover:text-white hover:border-white/[0.15] hover:bg-white/[0.06]"
+                                        }`}
                                     >
-                                        <MenuCard item={item} />
-                                    </motion.div>
-                                ))}
+                                        {cat.name}
+                                        <span
+                                            className={`text-[0.65rem] font-bold px-1.5 py-0.5 rounded-full ${
+                                                isActive
+                                                    ? "bg-white/20 text-white"
+                                                    : "bg-white/[0.07] text-white/40"
+                                            }`}
+                                        >
+                                            {cat.items.length}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {/* ── Search results ── */}
+                    <AnimatePresence mode="wait">
+                        {isSearching ? (
+                            <motion.div
+                                key="search-results"
+                                initial={{ opacity: 0, y: 16 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <p className="text-center text-white/35 text-sm mb-8">
+                                    {searchResults.length === 0
+                                        ? `No results for "${searchQuery}"`
+                                        : `${searchResults.length} result${searchResults.length !== 1 ? "s" : ""} for "${searchQuery}"`}
+                                </p>
+                                {searchResults.length > 0 && (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                                        {searchResults.map((item, idx) => (
+                                            <motion.div
+                                                key={item.id}
+                                                initial={{ opacity: 0, y: 16 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{
+                                                    delay: idx * 0.05,
+                                                    duration: 0.4,
+                                                }}
+                                            >
+                                                <MenuCard item={item} />
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                )}
                             </motion.div>
-                        );
-                    })}
+                        ) : (
+                            <motion.div key="category-view">
+                                {/* Category heading */}
+                                <SectionHeading
+                                    title={currentCategory.name}
+                                    subtitle={currentCategory.description}
+                                />
+
+                                {/* Menu items */}
+                                {menuData.map((category) => {
+                                    const isActive =
+                                        activeCategory === category.slug;
+                                    if (!isActive) return null;
+                                    return (
+                                        <motion.div
+                                            key={category.slug}
+                                            initial={{ opacity: 0, y: 24 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.5 }}
+                                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mt-6"
+                                        >
+                                            {category.items.map((item, idx) => (
+                                                <motion.div
+                                                    key={item.id}
+                                                    initial={{
+                                                        opacity: 0,
+                                                        y: 20,
+                                                    }}
+                                                    animate={{
+                                                        opacity: 1,
+                                                        y: 0,
+                                                    }}
+                                                    transition={{
+                                                        delay: idx * 0.07,
+                                                        duration: 0.45,
+                                                    }}
+                                                >
+                                                    <MenuCard item={item} />
+                                                </motion.div>
+                                            ))}
+                                        </motion.div>
+                                    );
+                                })}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     {/* Dietary legend */}
                     <motion.div

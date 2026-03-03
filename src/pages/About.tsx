@@ -1,34 +1,15 @@
-import { Heart, Leaf, Users, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Link } from "react-router";
 import SectionHeading from "../components/SectionHeading";
+import PageMeta from "../components/PageMeta";
+import { team, milestones, coreValues } from "../data/siteData";
 
-const team = [
-    {
-        name: "Amma Ji",
-        role: "Head Chef & Soul of the Kitchen",
-        bio: "The recipes live in her hands. Three decades of cooking with instinct, love, and an unmatched feel for spice.",
-        image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=300&h=300&fit=crop&crop=face",
-    },
-    {
-        name: "Rohan",
-        role: "Founder & Chai Enthusiast",
-        bio: "Left his tech job to build a place that felt like home. Still makes the morning chai himself, every single day.",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
-    },
-    {
-        name: "Priya",
-        role: "Manager & Community Builder",
-        bio: `The warmth you feel when you walk in? That's Priya. She knows every regular by name and their order by heart.`,
-        image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face",
-    },
-];
-
-/* ── 3D word-flip helpers ── */
+/* Animation variants — logic, not content — live here intentionally */
 const wordFlip = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.08 } },
+    visible: { transition: { staggerChildren: 0.1 } },
 };
 const wordItem = {
     hidden: { opacity: 0, y: 40, rotateX: 80 },
@@ -36,7 +17,7 @@ const wordItem = {
         opacity: 1,
         y: 0,
         rotateX: 0,
-        transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+        transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
     },
 };
 
@@ -50,6 +31,10 @@ export default function About() {
 
     return (
         <>
+            <PageMeta
+                title="Our Story"
+                description="Learn how Aangan Café was founded in 2020 with 5 tables and a dream — today serving 50,000+ happy patrons in Faridabad with heritage Indian recipes and warm hospitality."
+            />
             {/* ══════════ HERO ══════════ */}
             <section
                 ref={heroRef}
@@ -219,6 +204,74 @@ export default function About() {
                 </div>
             </section>
 
+            {/* ══════════ MILESTONE TIMELINE ══════════ */}
+            <section className="relative py-16 sm:py-24 overflow-hidden">
+                <div className="absolute inset-y-0 left-1/2 sm:left-1/3 lg:left-1/2 w-px bg-gradient-to-b from-transparent via-white/[0.08] to-transparent -translate-x-1/2 pointer-events-none" />
+                <div className="absolute top-1/4 right-0 w-72 h-72 bg-primary/4 rounded-full blur-[140px] pointer-events-none" />
+
+                <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
+                    <SectionHeading
+                        title="Our Journey"
+                        subtitle="Five years. One courtyard. Countless memories."
+                    />
+
+                    <div className="relative mt-10 sm:mt-14 space-y-0">
+                        {milestones.map((m, i) => (
+                            <motion.div
+                                key={m.year}
+                                initial={{
+                                    opacity: 0,
+                                    x: i % 2 === 0 ? -24 : 24,
+                                }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true, margin: "-40px" }}
+                                transition={{
+                                    delay: 0.05,
+                                    duration: 0.8,
+                                    ease: [0.16, 1, 0.3, 1],
+                                }}
+                                className={`relative flex gap-5 sm:gap-8 pb-8 sm:pb-12 last:pb-0 ${
+                                    i % 2 === 0
+                                        ? "sm:flex-row"
+                                        : "sm:flex-row-reverse sm:text-right"
+                                }`}
+                            >
+                                {/* Timeline dot + year */}
+                                <div className="flex flex-col items-center shrink-0">
+                                    <div
+                                        className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 ${m.bg} border border-white/[0.06]`}
+                                    >
+                                        <m.icon size={18} className={m.color} />
+                                    </div>
+                                    {i < milestones.length - 1 && (
+                                        <div className="w-px flex-1 mt-3 bg-gradient-to-b from-white/[0.08] to-transparent" />
+                                    )}
+                                </div>
+
+                                {/* Content */}
+                                <div
+                                    className={`glass-card p-5 sm:p-6 mb-8 sm:mb-0 flex-1 max-w-md ${
+                                        i % 2 !== 0 ? "sm:mr-auto" : "sm:ml-0"
+                                    }`}
+                                >
+                                    <span
+                                        className={`text-xs font-bold tracking-widest uppercase ${m.color} mb-2 block`}
+                                    >
+                                        {m.year}
+                                    </span>
+                                    <h3 className="font-heading font-semibold text-base sm:text-lg text-white mb-2">
+                                        {m.title}
+                                    </h3>
+                                    <p className="text-sm text-white/40 leading-relaxed">
+                                        {m.desc}
+                                    </p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* ══════════ CORE VALUES ══════════ */}
             <section className="relative py-16 sm:py-24 lg:py-28">
                 <div className="absolute top-1/2 left-1/4 w-80 h-80 bg-accent/10 rounded-full blur-[140px] pointer-events-none -translate-y-1/2" />
@@ -229,31 +282,9 @@ export default function About() {
                         subtitle="The uncompromising principles that guide every dish we plate and every cup we pour."
                     />
 
-                    {/* Always a proper grid — no carousel */}
+                    {/* Responsive grid — data from siteData.coreValues */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 mt-10 sm:mt-14">
-                        {[
-                            {
-                                icon: Heart,
-                                title: "Heritage First",
-                                color: "text-primary",
-                                bg: "bg-primary/10",
-                                desc: "Our recipes aren't just instructions; they are heirlooms passed down through generations, preserved and celebrated.",
-                            },
-                            {
-                                icon: Leaf,
-                                title: "Slow & Intentional",
-                                color: "text-accent",
-                                bg: "bg-accent/10",
-                                desc: "No shortcuts. From our 12-hour simmered Dal Makhani to our hand-pounded spices, we believe good things take time.",
-                            },
-                            {
-                                icon: Users,
-                                title: "Community Driven",
-                                color: "text-highlight",
-                                bg: "bg-highlight/10",
-                                desc: "We are more than a café; we are a gathering place. A courtyard where strangers become regulars, and regulars become family.",
-                            },
-                        ].map((value, i) => (
+                        {coreValues.map((value, i) => (
                             <motion.div
                                 key={i}
                                 initial={{ opacity: 0, y: 24 }}

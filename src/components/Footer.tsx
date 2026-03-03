@@ -1,26 +1,12 @@
 import { Link } from "react-router";
-import {
-    MapPin,
-    Phone,
-    Mail,
-    Clock,
-    Instagram,
-    Facebook,
-    ArrowUp,
-} from "lucide-react";
+import { Clock, ArrowUp } from "lucide-react";
 import { motion } from "framer-motion";
-
-const socialLinks = [
-    { href: "https://instagram.com", icon: Instagram, label: "Instagram" },
-    { href: "https://facebook.com", icon: Facebook, label: "Facebook" },
-];
-
-const quickLinks = [
-    { to: "/", label: "Home" },
-    { to: "/menu", label: "Our Menu" },
-    { to: "/about", label: "Our Story" },
-    { to: "/contact", label: "Contact" },
-];
+import {
+    siteConfig,
+    footerQuickLinks,
+    socialLinks,
+    footerHours,
+} from "../data/siteData";
 
 export default function Footer() {
     const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
@@ -96,7 +82,7 @@ export default function Footer() {
                                 Explore
                             </h3>
                             <ul className="space-y-2.5">
-                                {quickLinks.map((link) => (
+                                {footerQuickLinks.map((link) => (
                                     <li key={link.to}>
                                         <Link
                                             to={link.to}
@@ -114,31 +100,27 @@ export default function Footer() {
                             <h3 className="text-white font-heading font-semibold text-base mb-4 tracking-tight">
                                 Reach Us
                             </h3>
-                            <ul className="space-y-3 text-[0.82rem]">
-                                <li className="flex items-start gap-2.5 text-white/30">
-                                    <MapPin
-                                        size={14}
-                                        className="text-accent mt-0.5 shrink-0"
-                                    />
+                            <ul className="space-y-3 text-[0.82rem] text-white/30">
+                                <li className="flex items-start gap-2.5">
+                                    <span className="text-accent mt-0.5 shrink-0 text-xs">
+                                        📍
+                                    </span>
                                     <span>
-                                        Sector 21C, Faridabad,
-                                        <br />
-                                        Haryana 121001
+                                        {siteConfig.address.line1},<br />
+                                        {siteConfig.address.line2}
                                     </span>
                                 </li>
-                                <li className="flex items-center gap-2.5 text-white/30">
-                                    <Phone
-                                        size={14}
-                                        className="text-accent shrink-0"
-                                    />
-                                    <span>+91 98765 43210</span>
+                                <li className="flex items-center gap-2.5">
+                                    <span className="text-accent shrink-0 text-xs">
+                                        📞
+                                    </span>
+                                    <span>{siteConfig.phone}</span>
                                 </li>
-                                <li className="flex items-center gap-2.5 text-white/30">
-                                    <Mail
-                                        size={14}
-                                        className="text-accent shrink-0"
-                                    />
-                                    <span>hello@aangancafe.in</span>
+                                <li className="flex items-center gap-2.5">
+                                    <span className="text-accent shrink-0 text-xs">
+                                        ✉️
+                                    </span>
+                                    <span>{siteConfig.email}</span>
                                 </li>
                             </ul>
                         </div>
@@ -149,34 +131,25 @@ export default function Footer() {
                                 Hours
                             </h3>
                             <ul className="space-y-3 text-[0.82rem]">
-                                <li className="flex items-center gap-2.5">
-                                    <Clock
-                                        size={14}
-                                        className="text-accent shrink-0"
-                                    />
-                                    <div>
-                                        <p className="text-white/50 font-medium">
-                                            Mon – Sat
-                                        </p>
-                                        <p className="text-white/30">
-                                            8:00 AM – 10:00 PM
-                                        </p>
-                                    </div>
-                                </li>
-                                <li className="flex items-center gap-2.5">
-                                    <Clock
-                                        size={14}
-                                        className="text-accent shrink-0"
-                                    />
-                                    <div>
-                                        <p className="text-white/50 font-medium">
-                                            Sunday
-                                        </p>
-                                        <p className="text-white/30">
-                                            9:00 AM – 11:00 PM
-                                        </p>
-                                    </div>
-                                </li>
+                                {footerHours.map((row, i) => (
+                                    <li
+                                        key={i}
+                                        className="flex items-center gap-2.5"
+                                    >
+                                        <Clock
+                                            size={14}
+                                            className="text-accent shrink-0"
+                                        />
+                                        <div>
+                                            <p className="text-white/50 font-medium">
+                                                {row.label}
+                                            </p>
+                                            <p className="text-white/30">
+                                                {row.time}
+                                            </p>
+                                        </div>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </div>
@@ -186,8 +159,8 @@ export default function Footer() {
                 <div className="relative z-10 border-t border-white/[0.06]">
                     <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
                         <p className="text-[0.7rem] text-white/20">
-                            © {new Date().getFullYear()} Aangan Café · Made with
-                            ❤️ in Faridabad
+                            © {new Date().getFullYear()} {siteConfig.name} ·{" "}
+                            {siteConfig.copyright}
                         </p>
                         <motion.button
                             onClick={scrollToTop}

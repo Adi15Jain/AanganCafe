@@ -2,11 +2,13 @@ import { useState, useRef } from "react";
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import SectionHeading from "../components/SectionHeading";
+import PageMeta from "../components/PageMeta";
+import { siteConfig } from "../data/siteData";
 
-/* ── 3D word-flip helpers ── */
+/* Animation variants — logic, not content — live here intentionally */
 const wordFlip = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.08 } },
+    visible: { transition: { staggerChildren: 0.1 } },
 };
 const wordItem = {
     hidden: { opacity: 0, y: 40, rotateX: 80 },
@@ -14,7 +16,7 @@ const wordItem = {
         opacity: 1,
         y: 0,
         rotateX: 0,
-        transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+        transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
     },
 };
 
@@ -32,8 +34,19 @@ export default function Contact() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        // Build mailto: URL so this frontend-only form actually reaches the café
+        const subject = encodeURIComponent(
+            formData.subject || `Enquiry from ${formData.name}`,
+        );
+        const body = encodeURIComponent(
+            `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`,
+        );
+        window.open(
+            `mailto:${siteConfig.email}?subject=${subject}&body=${body}`,
+            "_blank",
+        );
         setSubmitted(true);
-        setTimeout(() => setSubmitted(false), 4000);
+        setTimeout(() => setSubmitted(false), 5000);
         setFormData({ name: "", email: "", subject: "", message: "" });
     };
 
@@ -46,6 +59,10 @@ export default function Contact() {
 
     return (
         <>
+            <PageMeta
+                title="Contact Us"
+                description="Reach out to Aangan Café for reservations, events, or just to say hello. Located in Sector 21C, Faridabad. Call, email, or visit us."
+            />
             {/* ══════════ HERO ══════════ */}
             <section
                 ref={heroRef}
@@ -364,24 +381,42 @@ export default function Contact() {
                                 </p>
                             </div>
                         </div>
-                        <div className="h-44 sm:h-56 bg-white/[0.02] flex items-center justify-center">
-                            <div className="text-center">
-                                <MapPin
-                                    size={28}
-                                    className="text-primary mx-auto mb-3 opacity-30"
-                                />
-                                <p className="text-sm text-white/30 mb-3">
-                                    Interactive map coming soon
-                                </p>
-                                <a
-                                    href="https://maps.google.com/?q=Sector+21C+Faridabad"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-block text-sm text-primary font-medium hover:underline"
-                                >
-                                    Open in Google Maps →
-                                </a>
-                            </div>
+                        {/* Interactive Google Maps embed */}
+                        <div
+                            className="relative overflow-hidden"
+                            style={{ height: "320px" }}
+                        >
+                            <iframe
+                                src={siteConfig.address.mapEmbed}
+                                width="100%"
+                                height="100%"
+                                style={{
+                                    border: 0,
+                                    filter: "invert(90%) hue-rotate(180deg) saturate(0.8) brightness(0.88)",
+                                }}
+                                allowFullScreen
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                                title="Aangan Café Location Map"
+                                className="w-full h-full"
+                            />
+                            {/* Subtle dark overlay at edges for glass frame effect */}
+                            <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_40px_rgba(12,14,19,0.5)]" />
+                        </div>
+                        {/* Open in app link */}
+                        <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between">
+                            <p className="text-xs text-white/25">
+                                {siteConfig.address.landmark} ·{" "}
+                                {siteConfig.address.parking}
+                            </p>
+                            <a
+                                href={siteConfig.address.mapUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1.5 text-xs text-primary font-semibold hover:underline shrink-0"
+                            >
+                                Open in Maps →
+                            </a>
                         </div>
                     </motion.div>
                 </div>

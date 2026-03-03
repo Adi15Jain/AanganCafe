@@ -3,13 +3,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
-
-const navLinks = [
-    { to: "/", label: "Home" },
-    { to: "/menu", label: "Menu" },
-    { to: "/about", label: "Our Story" },
-    { to: "/contact", label: "Contact" },
-];
+import { navLinks } from "../data/siteData";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);

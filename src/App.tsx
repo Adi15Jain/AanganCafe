@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import NotFound from "./pages/NotFound";
 import CanvasBackground from "./components/CanvasBackground";
 
 /* Scroll to top on every route change */
@@ -36,6 +37,7 @@ function AnimatedRoutes() {
                     <Route path="/menu" element={<Menu />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/contact" element={<Contact />} />
+                        <Route path="*" element={<NotFound />} />
                 </Routes>
                 <Footer />
             </motion.div>
